@@ -34,10 +34,10 @@ const Home: NextPage = () => {
         </h1>
         <p className={styles.typedText}>{animatedText}</p>
         <div className={styles.grid}>
-          <div className={styles.card}>
+          <a href="/practice" className={styles.card}>
             <h2>Practice</h2>
             <p>Test your skills without having to worry about an opponent.</p>
-          </div>
+          </a>
           <div className={styles.card}>
             <h2 className={styles.titel}>Random duel</h2>
             <p>Play against a random player.</p>
