@@ -8,6 +8,7 @@ import {
 } from "../components/Button";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
+import TypingAnimatedText from "../components/TypingAnimatedText";
 import TypingGame from "../components/TypingGame";
 import styles from "../styles/Practice.module.css";
 import getRandomParagraph from "../utils/paragraphs";
@@ -97,7 +98,7 @@ const Practice: NextPage = () => {
           </>
         ) : (
           <div className={styles.howToPlay}>
-            <h1>How to play</h1>
+            <TypingAnimatedText text="How to play" type="h1" />
             <p>
               The goal of the game is to type the text as fast as possible. The
               text will be displayed in the middle of the screen with a
