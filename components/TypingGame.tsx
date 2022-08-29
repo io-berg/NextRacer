@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
-import styles from "../styles/PracticeGame.module.css";
-import Timer from "./Timer";
+import styles from "../styles/TypingGame.module.css";
+import Timer from "./CountDown";
+import StopWatch from "./StopWatch";
 
 interface Props {
   time: number;
@@ -44,17 +45,11 @@ const TypingGame: FC<Props> = ({
   }, [interval]);
 
   return (
-    <div className={countDownTime === 0 ? styles.game : styles.waitTime}>
+    <div className={styles.game}>
       {countDownTime !== 0 ? (
         <Timer time={countDownTime} />
       ) : (
-        <div className={styles.stopWatch}>
-          <div>
-            <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-            <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}.</span>
-            <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
-          </div>
-        </div>
+        <StopWatch time={time} />
       )}
       <span className={styles.paragraph}>
         {paragraph.split("").map((letter, idx) => {

@@ -84,7 +84,7 @@ const Practice: NextPage = () => {
               handleChange={handleChange}
             />
             {gameFinished ? (
-              <div>
+              <div className={styles.finishMessage}>
                 <h1>Game Finished</h1>
                 <span>
                   You typed:{" "}
