@@ -1,18 +1,69 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
-import StartButton from "../components/Button";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import {
+  default as Button,
+  default as StartButton,
+} from "../components/Button";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-import PracticeGame from "../components/PracticeGame";
+import TypingGame from "../components/TypingGame";
 import styles from "../styles/Practice.module.css";
+import getRandomParagraph from "../utils/paragraphs";
 
 const Practice: NextPage = () => {
-  const [currenttlyPlaying, setCurrenttlyPlaying] = useState<boolean>(false);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<boolean>(false);
+  const interval = useRef<NodeJS.Timer>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [time, setTime] = useState(0);
+  const [inputDisabled, setInputDisabled] = useState(true);
+  const [userInput, setUserInput] = useState<string>("");
+  const [gameFinished, setGameFinished] = useState(false);
+  const [paragraph, setParagraph] = useState("");
+
+  const handleReset = () => {
+    setCurrentlyPlaying(false);
+    setGameFinished(false);
+    setTime(0);
+    setUserInput("");
+    setParagraph(getRandomParagraph);
+  };
 
   const handleStart = () => {
-    setCurrenttlyPlaying(true);
+    setCurrentlyPlaying(true);
   };
+
+  const startCounter = () => {
+    if (interval.current) {
+      clearInterval(interval.current);
+    }
+
+    interval.current = setInterval(() => {
+      setTime((prev) => prev + 10);
+    }, 10);
+    flushSync(() => {
+      setInputDisabled(false);
+    });
+    inputRef.current?.focus();
+  };
+
+  const stopCounter = () => {
+    clearInterval(interval.current);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+
+    if (e.target.value === paragraph) {
+      stopCounter();
+      setGameFinished(true);
+    }
+  };
+
+  useEffect(() => {
+    setParagraph(getRandomParagraph);
+  }, []);
 
   return (
     <Layout>
@@ -21,8 +72,29 @@ const Practice: NextPage = () => {
       </Head>
       <Header />
       <main className={styles.main}>
-        {currenttlyPlaying ? (
-          <PracticeGame />
+        {currentlyPlaying ? (
+          <>
+            <TypingGame
+              paragraph={paragraph}
+              time={time}
+              startCounter={startCounter}
+              inputDisabled={inputDisabled}
+              inputRef={inputRef}
+              userInput={userInput}
+              handleChange={handleChange}
+            />
+            {gameFinished ? (
+              <div>
+                <h1>Game Finished</h1>
+                <span>
+                  You typed:{" "}
+                  {(paragraph.split(" ").length / (time / 60000)).toFixed(3)}{" "}
+                  words per minutes
+                </span>
+                <Button onClick={() => handleReset()} text="Reset" />
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className={styles.howToPlay}>
             <h1>How to play</h1>

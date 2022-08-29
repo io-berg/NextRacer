@@ -1,17 +1,28 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
 import styles from "../styles/PracticeGame.module.css";
-import getRandomParagraph from "../utils/paragraphs";
 import Timer from "./Timer";
 
-const PracticeGame: FC = () => {
+interface Props {
+  time: number;
+  paragraph: string;
+  startCounter: () => void;
+  inputDisabled: boolean;
+  userInput: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
+}
+
+const TypingGame: FC<Props> = ({
+  time,
+  paragraph,
+  startCounter,
+  userInput,
+  handleChange,
+  inputRef,
+  inputDisabled,
+}) => {
   const [countDownTime, setCountDownTime] = useState(5);
-  const [paragraph, setParagraph] = useState("");
-  const [userInput, setUserInput] = useState<string>("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [time, setTime] = useState(0);
   const interval = useRef<NodeJS.Timer>();
-  const [inputDisabled, setInputDisabled] = useState(true);
 
   const startCountdown = () => {
     for (let i = 5; i >= 0; i--) {
@@ -24,40 +35,13 @@ const PracticeGame: FC = () => {
     }
   };
 
-  const startCounter = () => {
-    if (interval.current) {
-      clearInterval(interval.current);
-    }
-
-    interval.current = setInterval(() => {
-      setTime((prev) => prev + 10);
-    }, 10);
-    flushSync(() => {
-      setInputDisabled(false);
-    });
-    inputRef.current?.focus();
-  };
-
-  const stopCounter = () => {
-    clearInterval(interval.current);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInput(e.target.value);
-
-    if (e.target.value === paragraph) {
-      stopCounter();
-    }
-  };
-
   useEffect(() => {
-    setParagraph(getRandomParagraph);
     startCountdown();
 
     return () => {
       clearInterval(interval.current);
     };
-  }, []);
+  }, [interval]);
 
   return (
     <div className={countDownTime === 0 ? styles.game : styles.waitTime}>
@@ -98,10 +82,10 @@ const PracticeGame: FC = () => {
         onChange={(e) => handleChange(e)}
         disabled={inputDisabled}
         placeholder="Type here..."
-        onPaste={(e) => e.preventDefault()}
+        // onPaste={(e) => e.preventDefault()}
       />
     </div>
   );
 };
 
-export default PracticeGame;
+export default TypingGame;
