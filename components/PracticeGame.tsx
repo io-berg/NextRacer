@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import styles from "../styles/PracticeGame.module.css";
 import getRandomParagraph from "../utils/paragraphs";
 import Timer from "./Timer";
@@ -10,6 +11,7 @@ const PracticeGame: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [time, setTime] = useState(0);
   const interval = useRef<NodeJS.Timer>();
+  const [inputDisabled, setInputDisabled] = useState(true);
 
   const startCountdown = () => {
     for (let i = 5; i >= 0; i--) {
@@ -28,8 +30,12 @@ const PracticeGame: FC = () => {
     }
 
     interval.current = setInterval(() => {
-      setTime((prev) => prev + 1);
-    }, 100);
+      setTime((prev) => prev + 10);
+    }, 10);
+    flushSync(() => {
+      setInputDisabled(false);
+    });
+    inputRef.current?.focus();
   };
 
   const stopCounter = () => {
@@ -55,8 +61,18 @@ const PracticeGame: FC = () => {
 
   return (
     <div className={countDownTime === 0 ? styles.game : styles.waitTime}>
-      <Timer time={countDownTime} />
-      <span onCopy={(e) => e.preventDefault()}>
+      {countDownTime !== 0 ? (
+        <Timer time={countDownTime} />
+      ) : (
+        <div className={styles.stopWatch}>
+          <div>
+            <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+            <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}.</span>
+            <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+          </div>
+        </div>
+      )}
+      <span className={styles.paragraph}>
         {paragraph.split("").map((letter, idx) => {
           if (userInput[idx] === letter) {
             return (
@@ -74,14 +90,13 @@ const PracticeGame: FC = () => {
           );
         })}
       </span>
-      <div className={styles.stopWatch}>
-        <span>{time}</span>
-      </div>
       <input
+        className={styles.input}
         ref={inputRef}
+        autoFocus={countDownTime === 0}
         value={userInput}
         onChange={(e) => handleChange(e)}
-        disabled={countDownTime === 0 ? false : true}
+        disabled={inputDisabled}
         placeholder="Type here..."
         onPaste={(e) => e.preventDefault()}
       />
