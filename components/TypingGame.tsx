@@ -10,7 +10,6 @@ interface Props {
   inputDisabled: boolean;
   userInput: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // inputRef: React.RefObject<HTMLInputElement>;
 }
 
 const TypingGame: FC<Props> = ({
@@ -19,7 +18,6 @@ const TypingGame: FC<Props> = ({
   startCounter,
   userInput,
   handleChange,
-  // inputRef,
   inputDisabled,
 }) => {
   const [countDownTime, setCountDownTime] = useState(5);
@@ -45,6 +43,10 @@ const TypingGame: FC<Props> = ({
       clearInterval(interval.current);
     };
   }, [interval]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [inputDisabled]);
 
   return (
     <div className={styles.game}>
@@ -79,7 +81,7 @@ const TypingGame: FC<Props> = ({
         onChange={(e) => handleChange(e)}
         disabled={inputDisabled}
         placeholder="Type here..."
-        // onPaste={(e) => e.preventDefault()}
+        onPaste={(e) => e.preventDefault()}
       />
     </div>
   );

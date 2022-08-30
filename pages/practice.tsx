@@ -16,7 +16,6 @@ import getRandomParagraph from "../utils/paragraphs";
 const Practice: NextPage = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<boolean>(false);
   const interval = useRef<NodeJS.Timer>();
-  // const inputRef = useRef<HTMLInputElement>(null);
   const [time, setTime] = useState(0);
   const [inputDisabled, setInputDisabled] = useState(true);
   const [userInput, setUserInput] = useState<string>("");
@@ -46,7 +45,6 @@ const Practice: NextPage = () => {
     flushSync(() => {
       setInputDisabled(false);
     });
-    // inputRef.current?.focus();
   };
 
   const stopCounter = () => {
@@ -80,7 +78,6 @@ const Practice: NextPage = () => {
               time={time}
               startCounter={startCounter}
               inputDisabled={inputDisabled}
-              // inputRef={inputRef}
               userInput={userInput}
               handleChange={handleChange}
             />
