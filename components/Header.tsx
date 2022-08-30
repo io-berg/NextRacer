@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FC } from "react";
 import styles from "../styles/Header.module.css";
 
@@ -8,9 +9,11 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ isHome }) => {
   return (
     <header className={styles.header}>
-      <a className={styles.link} href="/">
-        Next<span>Racer</span>
-      </a>
+      <Link className={styles.link} href="/">
+        <div>
+          Next<span>Racer</span>
+        </div>
+      </Link>
     </header>
   );
 };

@@ -8,11 +8,11 @@
   padding: 1rem;
 }
 
-.header a {
+.header div {
   font-size: 1.5rem;
   font-weight: 700;
 }
 
-.header a span {
+.header div span {
   color: #0070f3;
 }

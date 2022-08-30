@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import styles from "../styles/Home.module.css";
@@ -34,10 +35,12 @@ const Home: NextPage = () => {
         </h1>
         <p className={styles.typedText}>{animatedText}</p>
         <div className={styles.grid}>
-          <a href="/practice" className={styles.card}>
+          <Link href="/practice">
+            <div className={styles.card}>
             <h2>Practice</h2>
             <p>Test your skills without having to worry about an opponent.</p>
-          </a>
+            </div>
+          </Link>
           <div className={styles.card}>
             <h2 className={styles.titel}>Random duel</h2>
             <p>Play against a random player.</p>
