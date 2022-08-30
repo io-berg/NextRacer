@@ -10,7 +10,7 @@ interface Props {
   inputDisabled: boolean;
   userInput: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  inputRef: React.RefObject<HTMLInputElement>;
+  // inputRef: React.RefObject<HTMLInputElement>;
 }
 
 const TypingGame: FC<Props> = ({
@@ -19,11 +19,12 @@ const TypingGame: FC<Props> = ({
   startCounter,
   userInput,
   handleChange,
-  inputRef,
+  // inputRef,
   inputDisabled,
 }) => {
   const [countDownTime, setCountDownTime] = useState(5);
   const interval = useRef<NodeJS.Timer>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const startCountdown = () => {
     for (let i = 5; i >= 0; i--) {
@@ -34,6 +35,7 @@ const TypingGame: FC<Props> = ({
         }
       }, 1000 * (5 - i));
     }
+    inputRef.current?.focus();
   };
 
   useEffect(() => {

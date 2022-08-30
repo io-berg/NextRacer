@@ -1,14 +1,16 @@
+import Image from "next/image";
+import Link from "next/link";
 import styles from "../styles/Footer.module.css";
 
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <a
+      <Link
         href="https://github.com/io-berg/NextRacer"
         className={styles.footerContent}
       >
-        <img className={styles.logo} src="/github.svg" alt="Github" />
-      </a>
+        <Image layout="intrinsic" width="2rem" height="1rem" src="/github.svg" alt="Github" />
+      </Link>
     </footer>
   );
 };

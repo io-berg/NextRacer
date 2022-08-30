@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   default as Button,
-  default as StartButton,
+  default as StartButton
 } from "../components/Button";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
@@ -16,7 +16,7 @@ import getRandomParagraph from "../utils/paragraphs";
 const Practice: NextPage = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<boolean>(false);
   const interval = useRef<NodeJS.Timer>();
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
   const [time, setTime] = useState(0);
   const [inputDisabled, setInputDisabled] = useState(true);
   const [userInput, setUserInput] = useState<string>("");
@@ -46,7 +46,7 @@ const Practice: NextPage = () => {
     flushSync(() => {
       setInputDisabled(false);
     });
-    inputRef.current?.focus();
+    // inputRef.current?.focus();
   };
 
   const stopCounter = () => {
@@ -80,7 +80,7 @@ const Practice: NextPage = () => {
               time={time}
               startCounter={startCounter}
               inputDisabled={inputDisabled}
-              inputRef={inputRef}
+              // inputRef={inputRef}
               userInput={userInput}
               handleChange={handleChange}
             />
