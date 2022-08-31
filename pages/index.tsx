@@ -37,18 +37,20 @@ const Home: NextPage = () => {
         <div className={styles.grid}>
           <Link href="/practice">
             <div className={styles.card}>
-            <h2>Practice</h2>
-            <p>Test your skills without having to worry about an opponent.</p>
+              <h2>Practice</h2>
+              <p>Test your skills without having to worry about an opponent.</p>
             </div>
           </Link>
           <div className={styles.card}>
             <h2 className={styles.titel}>Random duel</h2>
             <p>Play against a random player.</p>
           </div>
-          <div className={styles.card}>
-            <h2>Duel a friend</h2>
-            <p>Generate a URL and play against a friend</p>
-          </div>
+          <Link href="/duel/friend">
+            <div className={styles.card}>
+              <h2>Duel a friend</h2>
+              <p>Generate a URL and play against a friend</p>
+            </div>
+          </Link>
         </div>
       </main>
     </Layout>

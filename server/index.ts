@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import * as http from "http";
 import next, { NextApiHandler } from "next";
 import * as socketio from "socket.io";
+import { generateSmallGuid } from "./utils";
 
 const port: number = parseInt(process.env.PORT || "3000", 10);
 const dev: boolean = process.env.NODE_ENV !== "production";
@@ -21,6 +22,13 @@ nextApp.prepare().then(async () => {
   io.on("connection", (socket: socketio.Socket) => {
     console.log("connection");
     socket.emit("status", "Hello from Socket.io");
+
+    socket.on("generateDuelCode", () => {
+      const duelcode = generateSmallGuid();
+      socket.join(duelcode);
+
+      socket.emit("duelcode", duelcode);
+    });
 
     socket.on("disconnect", () => {
       console.log("client disconnected");
