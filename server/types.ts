@@ -1,1 +1,6 @@
-export const hello = 1;
+interface DuelConnection {
+  players: string[];
+  code: string;
+}
+
+export type { DuelConnection };
