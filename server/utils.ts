@@ -10,10 +10,22 @@ const generateSmallGuid = () => {
 
 const getParagraph = () => {
   const paragraphs = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi.",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, ismod nisi.",
   ];
 
   return paragraphs[Math.floor(Math.random() * paragraphs.length)];
 };
 
-export { generateSmallGuid, getParagraph };
+const getUserProgress = (input: string, paragraph: string) => {
+  const complete = paragraph.length;
+  let progress = 0;
+
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === paragraph[i]) {
+      progress++;
+    }
+  }
+  return (progress / complete) * 100;
+};
+
+export { generateSmallGuid, getParagraph, getUserProgress };

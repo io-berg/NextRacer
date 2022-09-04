@@ -1,14 +1,19 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import Layout from "../../components/Layout";
 import TypingAnimatedText from "../../components/TypingAnimatedText";
-import TypingGame from "../../components/TypingGame";
+import TypingDuel from "../../components/TypingDuel";
 import styles from "../../styles/Duel_Friend.module.css";
+
+interface duelProgress {
+  player1: Number;
+  player2: Number;
+}
 
 const Friend: NextPage = () => {
   const [socket, setSocket] = useState<Socket>();
@@ -16,8 +21,14 @@ const Friend: NextPage = () => {
   const [matchFound, setMatchFound] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
   const [paragraph, setParagraph] = useState<string>("");
-  const [inputDisabled, setInputDisabled] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>("");
+  const [serverCountDownTime, setServerCountDownTime] = useState<number>(0);
+  const interval = useRef<NodeJS.Timer>();
+  const [progress, setProgress] = useState<duelProgress>({
+    player1: 0,
+    player2: 0,
+  });
+  const [imPlayer, setImPlayer] = useState<string>("");
 
   const router = useRouter();
 
@@ -28,6 +39,20 @@ const Friend: NextPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
+    socket?.emit("userInput", e.target.value);
+    if (e.target.value === paragraph) {
+      interval.current && clearInterval(interval.current);
+    }
+  };
+
+  const startCounter = () => {
+    if (interval.current) {
+      clearInterval(interval.current);
+    }
+
+    interval.current = setInterval(() => {
+      setTime((prev) => prev + 10);
+    }, 10);
   };
 
   useEffect(() => {
@@ -40,21 +65,30 @@ const Friend: NextPage = () => {
 
     socket?.on("duelCode", (duelCode: string) => {
       setDuelCode(duelCode);
-      console.log(duelCode);
     });
 
-    socket?.on("MatchFound", () => {
-      console.log("Match Found");
-      setMatchFound(true);
+    socket?.on("matchFound", (para: string) => {
+      setParagraph(para);
+      console.log(para);
     });
 
     socket?.on("joinedDuelResult", (result: boolean) => {
       console.log(result);
     });
 
-    socket?.on("duelStart", (para: string) => {
+    socket?.on("duelStart", () => {
+      setTimeout(() => {
+        console.log("start");
+      }, 3000);
       setMatchFound(true);
-      setParagraph(para);
+    });
+
+    socket?.on("Countdown", (time: number) => {
+      setServerCountDownTime(time);
+    });
+
+    socket?.on("duelProgress", (progress: duelProgress) => {
+      setProgress(progress);
     });
 
     if (!router.isReady) return;
@@ -77,7 +111,7 @@ const Friend: NextPage = () => {
       </Head>
       <Header />
       <main className={styles.main}>
-        {!matchFound ? (
+        {!matchFound || !paragraph ? (
           <>
             <TypingAnimatedText text="Duel a friend" type="h1" />
             {!duelCode ? (
@@ -97,14 +131,16 @@ const Friend: NextPage = () => {
           </>
         ) : (
           <>
-            <div>Match Found</div>
-            <TypingGame
-              time={time}
-              paragraph="Hello, World!"
-              startCounter={() => console.log("lul")}
-              inputDisabled={inputDisabled}
+            <p>p1: {progress.player1.toString()} %</p>
+            <p>p2: {progress.player2.toString()} %</p>
+            <TypingDuel
+              paragraph={paragraph}
+              serverCountDownTime={serverCountDownTime}
+              inputDisabled={serverCountDownTime === 0 ? false : true}
               userInput={userInput}
               handleChange={handleChange}
+              time={time}
+              startCounter={startCounter}
             />
           </>
         )}

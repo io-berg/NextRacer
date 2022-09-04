@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import styles from "../styles/TypingGame.module.css";
 import Timer from "./CountDown";
 import StopWatch from "./StopWatch";
@@ -10,11 +10,10 @@ interface Props {
   inputDisabled: boolean;
   userInput: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  serverCountDownTime?: number;
-  practice?: boolean;
+  serverCountDownTime: number;
 }
 
-const TypingGame: FC<Props> = ({
+const TypingDuel: FC<Props> = ({
   time,
   paragraph,
   startCounter,
@@ -22,44 +21,28 @@ const TypingGame: FC<Props> = ({
   handleChange,
   inputDisabled,
   serverCountDownTime,
-  practice,
 }) => {
-  const [countDownTime, setCountDownTime] = useState(5);
   const interval = useRef<NodeJS.Timer>();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const startCountdown = () => {
-    for (let i = 5; i >= 0; i--) {
-      setTimeout(() => {
-        setCountDownTime(i);
-        if (i === 0) {
-          startCounter();
-        }
-      }, 1000 * (5 - i));
-    }
-    inputRef.current?.focus();
-  };
-
-  if (serverCountDownTime == 0) {
-    startCounter();
-  }
-
   useEffect(() => {
-    if (practice) startCountdown();
-
     return () => {
       clearInterval(interval.current);
     };
   }, [interval]);
 
   useEffect(() => {
+    if (serverCountDownTime == 0) {
+      startCounter();
+    }
+
     inputRef.current?.focus();
-  }, [inputDisabled]);
+  }, [inputDisabled, serverCountDownTime]);
 
   return (
     <div className={styles.game}>
-      {countDownTime !== 0 ? (
-        <Timer time={countDownTime} />
+      {serverCountDownTime !== 0 ? (
+        <Timer time={serverCountDownTime} />
       ) : (
         <StopWatch time={time} />
       )}
@@ -84,7 +67,7 @@ const TypingGame: FC<Props> = ({
       <input
         className={styles.input}
         ref={inputRef}
-        autoFocus={countDownTime === 0}
+        autoFocus={serverCountDownTime === 0}
         value={userInput}
         onChange={(e) => handleChange(e)}
         disabled={inputDisabled}
@@ -95,4 +78,4 @@ const TypingGame: FC<Props> = ({
   );
 };
 
-export default TypingGame;
+export default TypingDuel;

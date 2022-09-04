@@ -80,6 +80,7 @@ const Practice: NextPage = () => {
               inputDisabled={inputDisabled}
               userInput={userInput}
               handleChange={handleChange}
+              practice
             />
             {gameFinished ? (
               <div className={styles.finishMessage}>
